@@ -12,9 +12,10 @@ import {
   Bookmark,
   Trash2,
   Search,
-  X
+  X,
+  ArrowLeft
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useBriefData } from "@/hooks/useBriefData";
 import { Badge } from "@/components/ui/badge";
@@ -44,6 +45,7 @@ const DashboardSidebar = ({ onHistorySelect, onSavedSelect }: DashboardSidebarPr
   const [searchQuery, setSearchQuery] = useState("");
   const [showQuickView, setShowQuickView] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const {
     history,
@@ -110,7 +112,7 @@ const DashboardSidebar = ({ onHistorySelect, onSavedSelect }: DashboardSidebarPr
           <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center shrink-0">
             <Zap className="h-4 w-4 text-primary-foreground" />
           </div>
-          {!collapsed && <span className="font-display font-bold text-sm">BrieflyAI</span>}
+          {!collapsed && <span className="font-display font-bold text-sm">JargonSimplifier</span>}
         </div>
 
         {/* Search - Only visible when expanded */}
@@ -136,6 +138,37 @@ const DashboardSidebar = ({ onHistorySelect, onSavedSelect }: DashboardSidebarPr
             </div>
           </div>
         )}
+
+        {/* Back to Home Button */}
+        <div className="px-3 py-2 border-b border-sidebar-border">
+          {collapsed ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/')}
+                  className="w-full justify-center"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Back to Home</p>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/')}
+              className="w-full justify-start gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Home</span>
+            </Button>
+          )}
+        </div>
 
         {/* Nav */}
         <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">

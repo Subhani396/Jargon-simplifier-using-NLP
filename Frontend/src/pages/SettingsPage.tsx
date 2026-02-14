@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import DashboardSidebar from '@/components/DashboardSidebar';
 import { useBriefData } from '@/hooks/useBriefData';
+import { useTheme } from '@/contexts/ThemeContext';
 import {
     Settings as SettingsIcon,
     Moon,
     Sun,
-    Monitor,
     Bell,
     Mail,
     Save,
     Globe,
     Key,
     Trash2,
-    Check
+    Check,
+    Monitor
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,12 +43,13 @@ import { cn } from '@/lib/utils';
 
 const SettingsPage = () => {
     const { settings, updateSettings, clearHistory } = useBriefData();
+    const { theme, setTheme } = useTheme();
     const [apiKey, setApiKey] = useState(settings.apiKey || '');
     const [showApiKey, setShowApiKey] = useState(false);
     const [saved, setSaved] = useState(false);
 
-    const handleThemeChange = (theme: 'light' | 'dark' | 'system') => {
-        updateSettings({ theme });
+    const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+        setTheme(newTheme);
     };
 
     const handleDefaultAudienceChange = (audience: string) => {
@@ -115,7 +117,7 @@ const SettingsPage = () => {
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Monitor className="h-5 w-5" />
+                                <Sun className="h-5 w-5" />
                                 Appearance
                             </CardTitle>
                             <CardDescription>
@@ -130,7 +132,7 @@ const SettingsPage = () => {
                                         onClick={() => handleThemeChange('light')}
                                         className={cn(
                                             "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors",
-                                            settings.theme === 'light'
+                                            theme === 'light'
                                                 ? "border-primary bg-primary/5"
                                                 : "border-border hover:border-primary/50"
                                         )}
@@ -142,7 +144,7 @@ const SettingsPage = () => {
                                         onClick={() => handleThemeChange('dark')}
                                         className={cn(
                                             "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors",
-                                            settings.theme === 'dark'
+                                            theme === 'dark'
                                                 ? "border-primary bg-primary/5"
                                                 : "border-border hover:border-primary/50"
                                         )}
@@ -154,7 +156,7 @@ const SettingsPage = () => {
                                         onClick={() => handleThemeChange('system')}
                                         className={cn(
                                             "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors",
-                                            settings.theme === 'system'
+                                            theme === 'system'
                                                 ? "border-primary bg-primary/5"
                                                 : "border-border hover:border-primary/50"
                                         )}
@@ -390,7 +392,6 @@ const SettingsPage = () => {
                     <Card>
                         <CardContent className="pt-6">
                             <div className="text-center text-sm text-muted-foreground">
-                                <p>BrieflyAI v1.0.0</p>
                                 <p className="mt-1">
                                     Ready for FastAPI backend integration with NLP processing
                                 </p>

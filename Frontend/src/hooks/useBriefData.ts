@@ -11,7 +11,7 @@ export function useBriefData() {
     const [history, setHistory] = useLocalStorage<HistoryItem[]>('briefHistory', []);
     const [savedItems, setSavedItems] = useLocalStorage<SavedItem[]>('savedBriefs', []);
     const [settings, setSettings] = useLocalStorage<UserSettings>('userSettings', {
-        theme: 'system',
+        theme: 'light',
         defaultAudience: 'executives',
         autoSave: false,
         notifications: {

@@ -1,7 +1,8 @@
-import { Zap, BarChart3, AlertTriangle, Target, ArrowRight } from "lucide-react";
+import { Zap, BarChart3, AlertTriangle, Target, ArrowRight, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/hero-illustration.png";
+import { useTheme } from "@/contexts/ThemeContext";
+import { cn } from "@/lib/utils";
 
 const features = [
   {
@@ -27,6 +28,16 @@ const features = [
 ];
 
 const Home = () => {
+  const { resolvedTheme, setTheme } = useTheme();
+
+  // Toggle between light and dark
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === 'light' ? 'dark' : 'light');
+  };
+
+  const isLightMode = resolvedTheme === 'light';
+  const isDarkMode = resolvedTheme === 'dark';
+
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
@@ -36,15 +47,70 @@ const Home = () => {
             <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
               <Zap className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-display text-lg font-bold">BrieflyAI</span>
+            <span className="font-display text-lg font-bold">Jargon Simplifier</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-foreground transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
           </div>
-          <Link to="/dashboard">
-            <Button size="sm">Open Dashboard</Button>
-          </Link>
+          <div className="flex items-center gap-3">
+            {/* Animated Toggle Switch */}
+            <button
+              onClick={toggleTheme}
+              className={cn(
+                "relative h-9 w-[72px] rounded-full border transition-all duration-300",
+                "flex items-center px-1",
+                isLightMode
+                  ? "bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/20 dark:to-orange-900/20 border-amber-300 dark:border-amber-700"
+                  : "bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20 border-indigo-300 dark:border-indigo-700",
+                "hover:shadow-lg hover:scale-105",
+                "group"
+              )}
+              aria-label={`Switch to ${isLightMode ? 'dark' : 'light'} mode`}
+            >
+              {/* Light Icon (Left) */}
+              <Sun className={cn(
+                "absolute left-2 h-4 w-4 transition-all duration-300",
+                isLightMode
+                  ? "text-amber-600 dark:text-amber-500 scale-100 opacity-100"
+                  : "text-muted-foreground/30 scale-75 opacity-50"
+              )} />
+
+              {/* Sliding Toggle */}
+              <div className={cn(
+                "absolute h-7 w-7 rounded-full transition-all duration-500 ease-out",
+                "shadow-md",
+                isLightMode
+                  ? "left-1 bg-gradient-to-br from-amber-400 to-orange-500"
+                  : "left-[37px] bg-gradient-to-br from-indigo-500 to-purple-600",
+                "group-hover:shadow-xl",
+                // Glow effect
+                isLightMode
+                  ? "shadow-amber-400/50"
+                  : "shadow-indigo-500/50"
+              )}>
+                {/* Inner glow */}
+                <div className={cn(
+                  "absolute inset-0 rounded-full blur-sm opacity-60",
+                  isLightMode
+                    ? "bg-amber-300"
+                    : "bg-indigo-400"
+                )} />
+              </div>
+
+              {/* Dark Icon (Right) */}
+              <Moon className={cn(
+                "absolute right-2 h-4 w-4 transition-all duration-300",
+                !isLightMode
+                  ? "text-indigo-400 scale-100 opacity-100"
+                  : "text-muted-foreground/30 scale-75 opacity-50"
+              )} />
+            </button>
+
+            <Link to="/dashboard">
+              <Button size="sm">Open Dashboard</Button>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -63,8 +129,7 @@ const Home = () => {
               <span className="text-gradient">Decision-Makers</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.2s", opacity: 0 }}>
-              Convert complex technical updates into clear, executive-ready insights.
-              No more lost-in-translation moments.
+              Upload technical documents and get clean, executive-ready summaries that anyone can understand — in seconds, not hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.3s", opacity: 0 }}>
               <Link to="/dashboard">
@@ -75,14 +140,52 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.4s", opacity: 0 }}>
-            <div className="relative rounded-2xl overflow-hidden shadow-elevated border border-border/50">
-              <img
-                src={heroImage}
-                alt="Developer to AI to Stakeholder flow"
-                className="w-full h-auto"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
+          <div className="max-w-5xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.4s", opacity: 0 }}>
+            <div className="relative rounded-2xl overflow-hidden shadow-elevated border border-border/50 bg-card p-8 md:p-12">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                {/* Input Section */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-2 w-2 rounded-full bg-muted-foreground/30" />
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Input</span>
+                  </div>
+                  <div className="bg-muted/30 rounded-xl p-6 border border-border/50">
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                      "The microservice architecture leverages Kubernetes orchestration with Istio service mesh for mTLS, implementing a CQRS pattern with event sourcing via Apache Kafka for eventual consistency across bounded contexts..."
+                    </p>
+                  </div>
+                </div>
+
+                {/* Arrow */}
+                <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                  <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center shadow-lg">
+                    <ArrowRight className="h-6 w-6 text-primary-foreground" />
+                  </div>
+                </div>
+
+                {/* Mobile Arrow */}
+                <div className="md:hidden flex justify-center -my-4">
+                  <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center shadow-lg rotate-90">
+                    <ArrowRight className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                </div>
+
+                {/* Output Section */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-2 w-2 rounded-full bg-primary" />
+                    <span className="text-xs font-semibold text-primary uppercase tracking-wider">Output</span>
+                  </div>
+                  <div className="bg-primary/5 rounded-xl p-6 border border-primary/20">
+                    <p className="text-sm md:text-base text-foreground leading-relaxed">
+                      "Our system uses a modern setup where small, independent services communicate securely. Data stays consistent across all parts of the system, even during high traffic, using an industry-standard messaging system."
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subtle background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none -z-10" />
             </div>
           </div>
         </div>
@@ -162,7 +265,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-6 text-center text-sm text-muted-foreground">
-          © 2026 BrieflyAI. All rights reserved.
+          © 2026 Jargon Simplifier. All rights reserved.
         </div>
       </footer>
     </div>
