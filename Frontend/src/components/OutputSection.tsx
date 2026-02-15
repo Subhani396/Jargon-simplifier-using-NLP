@@ -5,16 +5,18 @@ import RiskIndicator from "./RiskIndicator";
 import ImpactGrid from "./ImpactGrid";
 import { toast } from "sonner";
 
-const mockExplanation = `The team completed a major database migration from PostgreSQL 12 to 15, which improves query speed and reduces hosting costs. A new user authentication system was added with multi-factor authentication (MFA) for better security. There's a 2-week timeline adjustment due to a third-party library update, but the new system architecture can handle 3 times more users than before.`;
+interface OutputSectionProps {
+  simplifiedText: string;
+  originalText: string;
+  audience: string;
+}
 
-const mockExecutiveSummary = `Database upgrade completed — faster, cheaper, more secure. Minor delay expected but scalability tripled.`;
-
-const OutputSection = () => {
+const OutputSection = ({ simplifiedText, originalText, audience }: OutputSectionProps) => {
   const [mode, setMode] = useState<"short" | "detailed">("short");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(mockExplanation);
+    navigator.clipboard.writeText(simplifiedText);
     setCopied(true);
     toast.success("Copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
@@ -66,7 +68,7 @@ const OutputSection = () => {
           </Button>
         </div>
         <p className="text-sm leading-relaxed text-foreground/90">
-          {mode === "short" ? mockExplanation.split(". ").slice(0, 2).join(". ") + "." : mockExplanation}
+          {mode === "short" ? simplifiedText.split(". ").slice(0, 2).join(". ") + "." : simplifiedText}
         </p>
       </div>
 
@@ -109,7 +111,7 @@ const OutputSection = () => {
           Executive One-Liner
         </h3>
         <p className="text-primary-foreground font-medium text-lg leading-relaxed">
-          "{mockExecutiveSummary}"
+          "{simplifiedText.split(". ")[0]}."
         </p>
       </div>
     </div>

@@ -112,7 +112,7 @@ const DashboardSidebar = ({ onHistorySelect, onSavedSelect }: DashboardSidebarPr
           <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center shrink-0">
             <Zap className="h-4 w-4 text-primary-foreground" />
           </div>
-          {!collapsed && <span className="font-display font-bold text-sm">JargonSimplifier</span>}
+          {!collapsed && <span className="font-display font-bold text-sm">Jargon Simplifier</span>}
         </div>
 
         {/* Search - Only visible when expanded */}

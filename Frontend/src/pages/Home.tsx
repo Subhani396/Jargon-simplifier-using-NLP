@@ -1,4 +1,4 @@
-import { Zap, BarChart3, AlertTriangle, Target, ArrowRight, Sun, Moon } from "lucide-react";
+import { Zap, BarChart3, AlertTriangle, Target, ArrowRight, Sun, Moon, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -16,10 +16,11 @@ const features = [
     description: "See business impact at a glance with intuitive charts and status indicators.",
   },
   {
-    icon: AlertTriangle,
-    title: "Risk Detection",
-    description: "Automatically identify and highlight potential risks with severity indicators.",
+    icon: BookOpen,
+    title: "Jargon Detection",
+    description: "Automatically identify complex technical terms and domain-specific language in any text.",
   },
+
   {
     icon: Target,
     title: "Business-Focused Output",
@@ -36,7 +37,7 @@ const Home = () => {
   };
 
   const isLightMode = resolvedTheme === 'light';
-  const isDarkMode = resolvedTheme === 'dark';
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -121,7 +122,7 @@ const Home = () => {
           <div className="max-w-3xl mx-auto text-center mb-12">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6 animate-fade-in">
               <Zap className="h-3.5 w-3.5" />
-              AI-Powered Technical Briefings
+              NLP-Powered Technical Briefings
             </div>
             <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
               Bridge the Gap Between{" "}

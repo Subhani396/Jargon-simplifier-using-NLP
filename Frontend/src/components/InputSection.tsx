@@ -1,20 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { audienceOptions } from "@/lib/audienceConfig";
 
 interface InputSectionProps {
   onSimplify: (text: string, audience: string) => void;
   isProcessing: boolean;
+  initialText?: string;
+  initialAudience?: string;
 }
 
-const audiences = ["Manager", "Client", "Executive", "Investor"];
-
-const InputSection = ({ onSimplify, isProcessing }: InputSectionProps) => {
-  const [text, setText] = useState("");
-  const [audience, setAudience] = useState("Manager");
+const InputSection = ({
+  onSimplify,
+  isProcessing,
+  initialText = "",
+  initialAudience = "Manager"
+}: InputSectionProps) => {
+  const [text, setText] = useState(initialText);
+  const [audience, setAudience] = useState(initialAudience);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const maxChars = 5000;
+
+  // Update text when initialText prop changes
+  useEffect(() => {
+    if (initialText) {
+      setText(initialText);
+    }
+  }, [initialText]);
+
+  // Update audience when initialAudience prop changes
+  useEffect(() => {
+    if (initialAudience) {
+      setAudience(initialAudience);
+    }
+  }, [initialAudience]);
+
+  const currentAudience = audienceOptions[audience] || audienceOptions.Manager;
 
   return (
     <div className="bg-card rounded-xl border border-border p-6 shadow-card">
@@ -39,26 +61,42 @@ const InputSection = ({ onSimplify, isProcessing }: InputSectionProps) => {
         </div>
       </div>
 
-      {/* Audience selector */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+      {/* Audience selector with enhanced UI */}
+      <div className="flex flex-col gap-3">
         <div className="relative">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-input bg-background text-sm hover:bg-accent transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-input bg-background text-sm hover:bg-accent transition-colors w-full sm:w-auto"
           >
+            <span className="text-xl">{currentAudience.icon}</span>
             <span className="text-muted-foreground">Audience:</span>
-            <span className="font-medium">{audience}</span>
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="font-medium">{currentAudience.label}</span>
+            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground ml-auto sm:ml-2" />
           </button>
+
+          {/* Audience description tooltip */}
+          <div className="mt-2 text-xs text-muted-foreground italic">
+            {currentAudience.description}
+          </div>
+
           {showDropdown && (
-            <div className="absolute top-full left-0 mt-1 w-40 bg-card border border-border rounded-lg shadow-elevated z-10 py-1 animate-scale-in">
-              {audiences.map((a) => (
+            <div className="absolute top-full left-0 mt-1 w-full sm:w-96 bg-card border border-border rounded-lg shadow-elevated z-10 py-1 animate-scale-in">
+              {Object.entries(audienceOptions).map(([key, option]) => (
                 <button
-                  key={a}
-                  onClick={() => { setAudience(a); setShowDropdown(false); }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-colors"
+                  key={key}
+                  onClick={() => { setAudience(key); setShowDropdown(false); }}
+                  className={`w-full text-left px-4 py-3 hover:bg-accent transition-colors border-b border-border last:border-b-0 ${audience === key ? 'bg-accent/50' : ''
+                    }`}
                 >
-                  {a}
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl mt-0.5">{option.icon}</span>
+                    <div className="flex-1">
+                      <div className="font-medium text-sm mb-1">{option.label}</div>
+                      <div className="text-xs text-muted-foreground leading-relaxed">
+                        {option.description}
+                      </div>
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
@@ -68,7 +106,7 @@ const InputSection = ({ onSimplify, isProcessing }: InputSectionProps) => {
         <Button
           onClick={() => onSimplify(text, audience)}
           disabled={!text.trim() || isProcessing}
-          className="gap-2 sm:ml-auto"
+          className="gap-2 w-full sm:w-auto sm:ml-auto"
           variant="hero"
         >
           {isProcessing ? (
