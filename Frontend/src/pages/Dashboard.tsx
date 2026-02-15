@@ -14,6 +14,8 @@ interface BriefData {
   audience: string;
   title: string;
   complexity?: any;
+  jargons?: Array<{ term: string; short: string; detailed: string }>;
+  complexityReasoning?: string;
 }
 
 const Dashboard = () => {
@@ -95,7 +97,7 @@ const Dashboard = () => {
         }
       }
 
-      const { simplifiedText, complexity } = result.data;
+      const { simplifiedText, complexity, jargons, complexityReasoning } = result.data;
 
       // Generate title from first 60 characters
       const title = originalText.length > 60
@@ -122,6 +124,8 @@ const Dashboard = () => {
         audience,
         title,
         complexity,
+        jargons: jargons || [],
+        complexityReasoning: complexityReasoning || '',
       });
 
       setIsProcessing(false);
@@ -169,6 +173,8 @@ const Dashboard = () => {
               originalText={currentBrief.originalText}
               audience={currentBrief.audience}
               complexity={currentBrief.complexity}
+              jargons={currentBrief.jargons}
+              complexityReasoning={currentBrief.complexityReasoning}
             />
           )}
 
