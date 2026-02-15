@@ -1,7 +1,7 @@
 // API client for FastAPI backend integration
 import { BriefItem, HistoryItem, SavedItem, UserSettings, ApiResponse } from '@/types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 class ApiClient {
     private baseUrl: string;
@@ -42,6 +42,66 @@ class ApiClient {
                 error: error instanceof Error ? error.message : 'Network error',
             };
         }
+    }
+
+    // Perplexity API methods
+    async simplifyText(text: string, audience: string): Promise<ApiResponse<{
+        originalText: string;
+        simplifiedText: string;
+        complexity: any;
+        metadata: any;
+    }>> {
+        return this.request('/simplify', {
+            method: 'POST',
+            body: JSON.stringify({ text, audience }),
+        });
+    }
+
+    async simplifyFile(file: File, audience: string): Promise<ApiResponse<{
+        originalText: string;
+        simplifiedText: string;
+        complexity: any;
+        fileMetadata: any;
+        metadata: any;
+    }>> {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('audience', audience);
+
+        try {
+            const response = await fetch(`${this.baseUrl}/simplify-file`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                return {
+                    success: false,
+                    error: data.error || 'File processing failed',
+                };
+            }
+
+            return {
+                success: true,
+                data,
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'Network error',
+            };
+        }
+    }
+
+    async analyzeComplexity(originalText: string, simplifiedText: string): Promise<ApiResponse<{
+        complexity: any;
+    }>> {
+        return this.request('/analyze-complexity', {
+            method: 'POST',
+            body: JSON.stringify({ originalText, simplifiedText }),
+        });
     }
 
     // Brief operations
@@ -110,7 +170,7 @@ class ApiClient {
         });
     }
 
-    // NLP operations (for future FastAPI integration)
+    // NLP operations (deprecated - use simplifyText instead)
     async processText(text: string, audience: string): Promise<ApiResponse<{ simplified: string }>> {
         return this.request<{ simplified: string }>('/nlp/simplify', {
             method: 'POST',

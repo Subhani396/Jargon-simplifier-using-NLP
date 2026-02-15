@@ -9,9 +9,10 @@ interface OutputSectionProps {
   simplifiedText: string;
   originalText: string;
   audience: string;
+  complexity?: any;
 }
 
-const OutputSection = ({ simplifiedText, originalText, audience }: OutputSectionProps) => {
+const OutputSection = ({ simplifiedText, originalText, audience, complexity }: OutputSectionProps) => {
   const [mode, setMode] = useState<"short" | "detailed">("short");
   const [copied, setCopied] = useState(false);
 
@@ -83,23 +84,23 @@ const OutputSection = ({ simplifiedText, originalText, audience }: OutputSection
             <div>
               <div className="flex justify-between text-xs mb-1.5">
                 <span className="text-muted-foreground">Technical (Original)</span>
-                <span className="font-medium">92%</span>
+                <span className="font-medium">{complexity?.original?.complexityScore || 92}%</span>
               </div>
               <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-                <div className="h-full gradient-primary rounded-full transition-all duration-1000" style={{ width: "92%" }} />
+                <div className="h-full gradient-primary rounded-full transition-all duration-1000" style={{ width: `${complexity?.original?.complexityScore || 92}%` }} />
               </div>
             </div>
             <div>
               <div className="flex justify-between text-xs mb-1.5">
                 <span className="text-muted-foreground">Simplified (Output)</span>
-                <span className="font-medium text-success">24%</span>
+                <span className="font-medium text-success">{complexity?.simplified?.complexityScore || 24}%</span>
               </div>
               <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-success rounded-full transition-all duration-1000" style={{ width: "24%" }} />
+                <div className="h-full bg-success rounded-full transition-all duration-1000" style={{ width: `${complexity?.simplified?.complexityScore || 24}%` }} />
               </div>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-4">Complexity reduced by <span className="font-semibold text-success">74%</span></p>
+          <p className="text-xs text-muted-foreground mt-4">Complexity reduced by <span className="font-semibold text-success">{complexity?.reduction?.percentage || 74}%</span></p>
         </div>
       </div>
 
